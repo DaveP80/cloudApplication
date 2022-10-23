@@ -35,7 +35,6 @@ def home():
         list_results2 = []
         list_results3 = []
         list_results4 = []
-        list_results5 = []
         urltemplate = "https://www.youtube.com/watch?v="
         regexquery = re.compile("(watchEndpoint\":{\"videoId\":\")\w\w\w\w\w\w\w\w\w\w\w")
         for var in re.finditer(regexquery, response.text):
@@ -45,49 +44,46 @@ def home():
         regextitle = re.compile("(\"title\":{\"runs\":\[{\"text\":\".[^\"]+)")
         for var3 in re.finditer(regextitle, response.text):
             list_results4.append(var3.group()[26:])
-        # for x in list_results4:
-        #     print (x) 
-        if len(list_results2)<2:
+
+        if len(list_results2)<1:
             return render_template('index.html',result="no matching videos")
             
         for i in range(len(list_results2)):
             if list_results2[i] not in list_results2[i + 1:]:
                 list_results3.append(urltemplate+list_results2[i])
 
-        # for i in range(len(list_results4)):
-        #     if list_results4[i] not in list_results4[i + 1:]:
-        #         list_results5.append(list_results4[i])
-
         if len(list_results3)<10:
-            emptystr = ""
+            # emptystr = ""
             listsize = len(list_results3)
+            # listsize2 = len()
 
-            for i in list_results3:
-                emptystr += (i + f'\n')
-            emptystr += (f"\nvideo titles ")
-            emptystr2 = f'\n'
+            # for i in list_results3:
+            #     emptystr += (i + '               ')
+            # emptystr += (f"\nvideo titles ")
+            # emptystr2 = f'\n'
 
-            for i in list_results4[0:listsize]:
-                emptystr2 += (i + f'\n')
+            # for i in list_results4[0:listsize]:
+            #     emptystr2 += (i + f'\n')
             # emptystr2.('utf8')
-            return render_template('index.html',result=emptystr + emptystr2)
+            finalistarray = [x+'  ' + y for x, y in zip(list_results3, list_results4[0:listsize])]
+            return render_template('index.html',result=finalistarray)
 
-        # if len(list_results5)<10:
-        #     return render_template('index.html',result=list_results5)
+        # emptystr = ""
+        # for i in list_results3[0:10]:
+        #     emptystr += (i + f'\n')
+        # emptystr += (f"\nvideo titles ")
+        # emptystr2 = f'\n'
 
-        # jsonresponse = list_results3[0:10]
-        emptystr = ""
-        for i in list_results3[0:10]:
-            emptystr += (i + f'\n')
-        emptystr += (f"\nvideo titles ")
-        emptystr2 = f'\n'
-        # jsonresponse2 = list_results5[0:10]
+        # for i in list_results4[0:10]:
+        #     emptystr2 += (i + f'\n')
+        # print(emptystr.encode('utf8') + emptystr2.encode('utf8'))
 
-        for i in list_results4[0:10]:
-            emptystr2 += (i + f'\n')
-        print(emptystr.encode('utf8') + emptystr2.encode('utf8'))
+        # sendbackstring = emptystr + emptystr2
+
+        finalistarray = [x+'  ' + y for x, y in zip(list_results3[0:10], list_results4[0:10])]
+        # print(finalistarray)
    
-        return render_template('index.html',result=emptystr + emptystr2)
+        return render_template('index.html',result=finalistarray)
 
     return render_template('index.html',result="most recent on youtube")
 
