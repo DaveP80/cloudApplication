@@ -3,6 +3,7 @@ __pycache__/
 *$py.class
 *.txt
 /scratch.py
+/regex.txt
 
 # C extensions
 *.so
