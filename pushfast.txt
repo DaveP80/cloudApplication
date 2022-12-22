@@ -1,0 +1,50 @@
+from requests_html import HTMLSession
+import asyncio
+import re
+def hello_world(request):
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    """Responds to any HTTP request.
+    Args:
+        request (flask.Request): HTTP request object.
+    Returns:
+        The response text or any set of values that can be turned into a
+        Response object using
+        `make_response <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>`.
+    """
+    request_json = request.get_json()
+    if request.args and 'message' in request.args:
+        return request.args.get('message')
+    elif request_json and 'message' in request_json:
+        return request_json['message']
+    else:
+        session1 = HTMLSession()
+        url = "https://www.youtube.com/results?search_query=python+tutorial&sp=CAMSBggDEAEYAg%253D%253D"
+        response = session1.get(url)
+        list_results = []
+        list_results3 = []
+        list_results4 = []
+        urltemplate = "https://www.youtube.com/watch?v="
+
+        regexquery = re.compile("(watchEndpoint\":{\"videoId\":\")\w\w\w\w\w\w\w\w\w\w\w")
+
+        for var in re.finditer(regexquery, response.text):
+            list_results.append(var.group()[-11:])
+            
+        regextitle = re.compile("(\"title\":{\"runs\":\[{\"text\":\".[^\"]+)")
+
+        for var3 in re.finditer(regextitle, response.text):
+            list_results4.append(var3.group()[26:])
+        list_resultspopped = list_results4[:6]
+            
+        for i in range(len(list_results)):
+            if list_results[i] not in list_results[i + 1:]:
+                list_results3.append(urltemplate+list_results[i])
+        #list_3 contains unique urls
+
+        finalistarray = [ x + '  ' + y  for x, y in zip(list_results3[0:10], list_resultspopped[0:10])]
+        datastring = ''
+        for x in finalistarray:
+            datastring += (x + ' ')
+   
+        return datastring
